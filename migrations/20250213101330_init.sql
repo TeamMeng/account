@@ -1,0 +1,60 @@
+-- Add migration script here
+CREATE TABLE wb_user (
+    uid BIGSERIAL PRIMARY KEY,
+    phone VARCHAR(11) NOT NULL UNIQUE,
+    password_hash VARCHAR(97) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TYPE gender_type AS ENUM (
+    'male',
+    'female',
+    'unknown'
+);
+
+CREATE TABLE wb_user_info (
+    uid BIGSERIAL PRIMARY KEY REFERENCES wb_user(uid),
+    nickname VARCHAR(60) NOT NULL,
+    gender gender_type DEFAULT 'unknown',
+    avatar TEXT DEFAULT NULL,
+    birthday DATE DEFAULT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE wb_follower (
+    id BIGSERIAL PRIMARY KEY,
+    follower_id BIGSERIAL NOT NULL REFERENCES wb_user(uid) UNIQUE,
+    followee_id BIGSERIAL NOT NULL REFERENCES wb_user(uid) UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE wb_post (
+    pid BIGSERIAL PRIMARY KEY,
+    uid BIGSERIAL NOT NULL REFERENCES wb_user(uid),
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE wb_feed (
+    fid BIGSERIAL PRIMARY KEY,
+    pid BIGSERIAL NOT NULL REFERENCES wb_post(pid),
+    uid BIGSERIAL NOT NULL REFERENCES wb_user(uid),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE wb_comment (
+    cid BIGSERIAL PRIMARY KEY,
+    pid BIGSERIAL NOT NULL REFERENCES wb_post(pid),
+    uid BIGSERIAL NOT NULL REFERENCES wb_user(uid),
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE wb_like (
+    lid BIGSERIAL PRIMARY KEY,
+    pid BIGSERIAL NOT NULL REFERENCES wb_post(pid) UNIQUE,
+    uid BIGSERIAL NOT NULL REFERENCES wb_user(uid) UNIQUE
+);
