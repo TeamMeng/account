@@ -1,0 +1,19 @@
+### valid
+POST http://localhost:6688/user/create
+Content-Type: application/json
+
+{
+    "phone": "13877778888",
+    "nickname": "TeamMeng",
+    "password": "hunter42"
+}
+
+### phone invalid
+POST http://localhost:6688/user/create
+Content-Type: application/json
+
+{
+    "phone": "3877778888",
+    "nickname": "TeamMeng",
+    "password": "hunter42"
+}

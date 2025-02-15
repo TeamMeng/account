@@ -1,25 +1,11 @@
 -- Add migration script here
 CREATE TABLE wb_user (
     uid BIGSERIAL PRIMARY KEY,
+    nickname VARCHAR(60) NOT NULL,
     phone VARCHAR(11) NOT NULL UNIQUE,
     password_hash VARCHAR(97) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TYPE gender_type AS ENUM (
-    'male',
-    'female',
-    'unknown'
-);
-
-CREATE TABLE wb_user_info (
-    uid BIGSERIAL PRIMARY KEY REFERENCES wb_user(uid),
-    nickname VARCHAR(60) NOT NULL,
-    gender gender_type DEFAULT 'unknown',
-    avatar TEXT DEFAULT NULL,
-    birthday DATE DEFAULT NULL,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE wb_follower (
