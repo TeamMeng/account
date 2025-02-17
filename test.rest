@@ -17,3 +17,21 @@ Content-Type: application/json
     "nickname": "TeamMeng",
     "password": "hunter42"
 }
+
+### signin valid
+POST http://localhost:6688/user/signin
+Content-Type: application/json
+
+{
+    "phone": "13877778888",
+    "password": "hunter42"
+}
+
+### signin invalid
+POST http://localhost:6688/user/signin
+Content-Type: application/json
+
+{
+    "phone": "13877778888",
+    "password": "123456"
+}

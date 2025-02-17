@@ -1,3 +1,3 @@
 mod user;
 
-pub use user::create_user_handler;
+pub use user::{create_user_handler, signin_handler};

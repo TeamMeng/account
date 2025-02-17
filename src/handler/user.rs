@@ -1,4 +1,4 @@
-use crate::{success, AppState, CreateUser, ErrorWarp};
+use crate::{success, AppState, CreateUser, ErrorWarp, RespToken, SigninUser};
 use axum::{
     extract::State,
     response::{IntoResponse, Response},
@@ -16,6 +16,26 @@ pub async fn create_user_handler(
 
     match state.create_user(input).await {
         Ok(user) => success(user.uid),
+        Err(e) => e.into_response(),
+    }
+}
+
+pub async fn signin_handler(
+    State(state): State<AppState>,
+    Json(input): Json<SigninUser>,
+) -> Response {
+    if let Err(err) = input.validate() {
+        return ErrorWarp(err).into_response();
+    }
+
+    match state.signin(input).await {
+        Ok(user) => match state.ek.sign(user) {
+            Ok(token) => {
+                let ret = RespToken::new(token);
+                success(ret)
+            }
+            Err(e) => e.into_response(),
+        },
         Err(e) => e.into_response(),
     }
 }

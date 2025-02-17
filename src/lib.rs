@@ -1,6 +1,7 @@
 mod config;
 mod error;
 mod handler;
+mod middleware;
 mod model;
 mod router;
 mod service;
@@ -14,11 +15,12 @@ use std::{ops::Deref, path::Path, sync::Arc};
 
 pub use config::{code_init, config_init, AppConfig, AuthConfig, ServerConfig, STATUS_CODE};
 pub use error::{AppError, ErrorWarp};
-pub use handler::create_user_handler;
-pub use model::{ChangeUserPassword, CreateUser, User};
+pub use handler::{create_user_handler, signin_handler};
+pub use middleware::{time, verify_token};
+pub use model::{ChangeUserPassword, CreateUser, RespToken, SigninUser, User};
 pub use utils::{
     fail, fail_null, hash_password, local_timestamp, success, success_null, validate_phone,
-    verify_password,
+    verify_password, DecodingKey, EncodingKey,
 };
 
 pub async fn run() -> Result<()> {
@@ -39,18 +41,33 @@ pub struct AppState {
 pub struct AppStateInner {
     pub config: AppConfig,
     pub pool: PgPool,
+    pub ek: EncodingKey,
+    pub dk: DecodingKey,
 }
 
 impl AppState {
     pub async fn new(config: AppConfig) -> Result<Self, AppError> {
         let pool = PgPool::connect(&config.server.db_url).await?;
+        let encoding_pem = include_str!("../fixtures/encoding.pem");
+        let decoding_pem = include_str!("../fixtures/decoding.pem");
+        let ek = EncodingKey::load(encoding_pem)?;
+        let dk = DecodingKey::load(decoding_pem)?;
         Ok(Self {
-            inner: Arc::new(AppStateInner { config, pool }),
+            inner: Arc::new(AppStateInner {
+                config,
+                pool,
+                ek,
+                dk,
+            }),
         })
     }
 
     pub async fn new_for_test() -> Result<(TestPg, Self), AppError> {
         let config = AppConfig::load()?;
+        let encoding_pem = include_str!("../fixtures/encoding.pem");
+        let decoding_pem = include_str!("../fixtures/decoding.pem");
+        let ek = EncodingKey::load(encoding_pem)?;
+        let dk = DecodingKey::load(decoding_pem)?;
 
         let post = config
             .server
@@ -66,7 +83,12 @@ impl AppState {
         Ok((
             tdb,
             Self {
-                inner: Arc::new(AppStateInner { config, pool }),
+                inner: Arc::new(AppStateInner {
+                    config,
+                    pool,
+                    ek,
+                    dk,
+                }),
             },
         ))
     }

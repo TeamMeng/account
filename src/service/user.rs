@@ -1,4 +1,4 @@
-use crate::{hash_password, AppError, AppState, CreateUser, User};
+use crate::{hash_password, verify_password, AppError, AppState, CreateUser, SigninUser, User};
 
 impl AppState {
     pub async fn create_user(&self, input: CreateUser) -> Result<User, AppError> {
@@ -33,6 +33,18 @@ impl AppState {
         .await?;
 
         Ok(user)
+    }
+
+    pub async fn signin(&self, input: SigninUser) -> Result<User, AppError> {
+        if let Some(user) = self.find_user_by_phone(&input.phone).await? {
+            if verify_password(&input.password, &user.password_hash)? {
+                return Ok(user);
+            }
+        }
+        Err(AppError::LoginError(format!(
+            "Phone or password error by {}",
+            input.phone
+        )))
     }
 }
 
@@ -93,6 +105,35 @@ mod tests {
         assert_eq!(user.phone, phone);
         assert_eq!(user.nickname, nickname);
         assert!(verify_password(password, &user.password_hash)?);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn signin_should_work() -> Result<()> {
+        let (_tdb, state) = AppState::new_for_test().await?;
+
+        let phone = "12345678901";
+        let password = "123456";
+        let nickname = "TeamMeng";
+
+        let input = CreateUser::new(phone, password, nickname);
+        state.create_user(input).await?;
+
+        let input = SigninUser::new(phone, password);
+        let user = state.signin(input).await?;
+
+        assert_eq!(user.phone, phone);
+        assert_eq!(user.nickname, nickname);
+        assert!(verify_password(password, &user.password_hash)?);
+
+        let input = SigninUser::new(phone, "hunter42");
+        let ret = state.signin(input).await;
+        assert!(ret.is_err());
+
+        let input = SigninUser::new("09876543211", password);
+        let ret = state.signin(input).await;
+        assert!(ret.is_err());
 
         Ok(())
     }

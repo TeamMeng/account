@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use validator::Validate;
 
-#[derive(Debug, Serialize, Deserialize, FromRow, Clone)]
+#[derive(Debug, Serialize, Deserialize, FromRow, Clone, PartialEq, Eq)]
 pub struct User {
     pub uid: i64,
     pub nickname: String,
@@ -21,6 +21,14 @@ pub struct CreateUser {
     #[validate(length(min = 6, max = 20, code = "10002"))]
     pub password: String,
     pub nickname: String,
+}
+
+#[derive(Debug, Deserialize, FromRow, Clone, Validate)]
+pub struct SigninUser {
+    #[validate(custom(function = "validate_phone", code = "10001"))]
+    pub phone: String,
+    #[validate(length(min = 6, max = 20, code = "10002"))]
+    pub password: String,
 }
 
 #[derive(Debug, Deserialize, FromRow, Clone)]
@@ -42,6 +50,28 @@ impl CreateUser {
             phone: phone.to_string(),
             password: password.to_string(),
             nickname: nickname.to_string(),
+        }
+    }
+}
+
+impl SigninUser {
+    pub fn new(phone: &str, password: &str) -> Self {
+        Self {
+            phone: phone.to_string(),
+            password: password.to_string(),
+        }
+    }
+}
+
+impl User {
+    pub fn new(uid: i64, nickname: &str, phone: &str, password: &str) -> Self {
+        Self {
+            uid,
+            nickname: nickname.to_string(),
+            phone: phone.to_string(),
+            password_hash: password.to_string(),
+            created_at: chrono::Utc::now(),
+            updated_at: chrono::Utc::now(),
         }
     }
 }

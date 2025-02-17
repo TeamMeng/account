@@ -9,6 +9,12 @@ pub enum AppError {
     #[error("Argon2 password hash error: {0}")]
     Argon2Error(#[from] argon2::password_hash::Error),
 
+    #[error("Jwt error: {0}")]
+    JwtError(#[from] jwt_simple::Error),
+
+    #[error("{0}")]
+    LoginError(String),
+
     #[error("Phone already exists: {0}")]
     PhoneAlreadyExists(String),
 
@@ -50,7 +56,8 @@ impl IntoResponse for AppError {
             | Self::IoError(_)
             | Self::SerdeYamlError(_)
             | Self::SqlxError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            Self::PhoneAlreadyExists(_) => StatusCode::BAD_REQUEST,
+            Self::PhoneAlreadyExists(_) | Self::LoginError(_) => StatusCode::BAD_REQUEST,
+            Self::JwtError(_) => StatusCode::UNAUTHORIZED,
         };
 
         fail(code.as_u16() as usize, self.to_string())
