@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 use validator::Validate;
 
-#[derive(Debug, Serialize, Deserialize, FromRow, Clone, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, FromRow, Clone, PartialEq, Eq, Default)]
 pub struct User {
     pub uid: i64,
     pub nickname: String,

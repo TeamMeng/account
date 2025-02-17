@@ -9,10 +9,12 @@ CREATE TABLE wb_user (
 );
 
 CREATE TABLE wb_follower (
-    id BIGSERIAL PRIMARY KEY,
-    follower_id BIGSERIAL NOT NULL REFERENCES wb_user(uid) UNIQUE,
-    followee_id BIGSERIAL NOT NULL REFERENCES wb_user(uid) UNIQUE,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    id BIGSERIAL PRIMARY KEY,  -- 自增主键，唯一标识每条记录
+    follower_id BIGINT NOT NULL REFERENCES wb_user(uid),  -- 关注者ID，外键关联 wb_user 表
+    followee_id BIGINT NOT NULL REFERENCES wb_user(uid),  -- 被关注者ID，外键关联 wb_user 表
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- 记录创建时间，自动填充当前时间戳
+    is_deleted BOOLEAN DEFAULT FALSE,  -- 标记是否取消关注（软删除）
+    UNIQUE (follower_id, followee_id)  -- 复合唯一约束，避免重复关注关系
 );
 
 CREATE TABLE wb_post (
@@ -25,7 +27,7 @@ CREATE TABLE wb_post (
 
 CREATE TABLE wb_feed (
     fid BIGSERIAL PRIMARY KEY,
-    pid BIGSERIAL NOT NULL REFERENCES wb_post(pid),
+    pid BIGSERIAL NOT NULL REFERENCES wb_user(uid),
     uid BIGSERIAL NOT NULL REFERENCES wb_user(uid),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
@@ -44,3 +46,6 @@ CREATE TABLE wb_like (
     pid BIGSERIAL NOT NULL REFERENCES wb_post(pid) UNIQUE,
     uid BIGSERIAL NOT NULL REFERENCES wb_user(uid) UNIQUE
 );
+
+CREATE INDEX idx_follower_follower_id ON wb_follower(follower_id) WHERE is_deleted = FALSE;  -- 加速查询有效关注者
+CREATE INDEX idx_follower_followee_id ON wb_follower(followee_id) WHERE is_deleted = FALSE;  -- 加速查询有效被关注者

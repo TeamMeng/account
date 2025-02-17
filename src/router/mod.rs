@@ -1,8 +1,10 @@
+mod follower;
 mod user;
 
 use crate::{time, AppState};
 use anyhow::Result;
 use axum::{middleware::from_fn, Router};
+use follower::follower_router;
 use tokio::net::TcpListener;
 use tracing::{info, level_filters::LevelFilter};
 use tracing_subscriber::{fmt::Layer, layer::SubscriberExt, util::SubscriberInitExt, Layer as _};
@@ -16,7 +18,9 @@ pub async fn start_route(state: AppState) -> Result<()> {
     tracing_subscriber::registry().with(layer).init();
 
     let user_routers = user_router(state.clone());
+    let follower_routers = follower_router(state.clone());
     let app = Router::new()
+        .nest("/follower", follower_routers)
         .nest("/user", user_routers)
         .layer(from_fn(time));
 

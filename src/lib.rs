@@ -9,15 +9,20 @@ mod utils;
 
 use anyhow::Result;
 use router::start_route;
-use sqlx::PgPool;
+use sqlx::{Executor, PgPool};
 use sqlx_db_tester::TestPg;
 use std::{ops::Deref, path::Path, sync::Arc};
 
 pub use config::{code_init, config_init, AppConfig, AuthConfig, ServerConfig, STATUS_CODE};
 pub use error::{AppError, ErrorWarp};
-pub use handler::{create_user_handler, signin_handler};
+pub use handler::{
+    create_user_handler, delete_follower_handler, followee_handler, get_all_followee_handler,
+    get_all_follower_handler, signin_handler,
+};
 pub use middleware::{time, verify_token};
-pub use model::{ChangeUserPassword, CreateUser, RespToken, SigninUser, User};
+pub use model::{
+    ChangeUserPassword, CreateFollower, CreateUser, Follower, RespToken, SigninUser, User,
+};
 pub use utils::{
     fail, fail_null, hash_password, local_timestamp, success, success_null, validate_phone,
     verify_password, DecodingKey, EncodingKey,
@@ -77,8 +82,18 @@ impl AppState {
 
         let database_url = &config.server.db_url[..post];
         let tdb = TestPg::new(database_url.to_string(), Path::new("./migrations"));
-
         let pool = tdb.get_pool().await;
+
+        // run prepared sql to insert test dat
+        let sql = include_str!("../fixtures/test.sql").split(';');
+        let mut ts = pool.begin().await.expect("begin transaction failed");
+        for s in sql {
+            if s.trim().is_empty() {
+                continue;
+            }
+            ts.execute(s).await.expect("execute sql failed");
+        }
+        ts.commit().await.expect("commit transaction failed");
 
         Ok((
             tdb,

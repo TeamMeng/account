@@ -1,10 +1,20 @@
-### valid
+### TeamMeng valid
 POST http://localhost:6688/user/create
 Content-Type: application/json
 
 {
     "phone": "13877778888",
     "nickname": "TeamMeng",
+    "password": "hunter42"
+}
+
+### TeamAlice valid
+POST http://localhost:6688/user/create
+Content-Type: application/json
+
+{
+    "phone": "13877778889",
+    "nickname": "TeamAlice",
     "password": "hunter42"
 }
 
@@ -35,3 +45,28 @@ Content-Type: application/json
     "phone": "13877778888",
     "password": "123456"
 }
+
+### get all users
+GET http://localhost:6688/user/users
+
+### create followee
+POST http://localhost:6688/follower/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Mzk3OTg4MzYsImV4cCI6MTc0MDQwMzYzNiwibmJmIjoxNzM5Nzk4ODM2LCJpc3MiOiJhY2NvdW50X3NlcnZlciIsImF1ZCI6ImFjY291bnRfd2ViIiwidWlkIjoxLCJuaWNrbmFtZSI6IlRlYW1NZW5nIiwicGhvbmUiOiIxMzg3Nzc3ODg4OCIsInBhc3N3b3JkX2hhc2giOiIkYXJnb24yaWQkdj0xOSRtPTE5NDU2LHQ9MixwPTEkRTJJSm83aktwTkdMK0hzV0NGOG1tQSRjVDV2R0ZxVi9aUVl1QzhXWGxaaWlvSnd3dkVRWVpZT2F1Z2hKUUEzUHE0IiwiY3JlYXRlZF9hdCI6IjIwMjUtMDItMTdUMTM6Mjc6MDcuNjQzNzg1WiIsInVwZGF0ZWRfYXQiOiIyMDI1LTAyLTE3VDEzOjI3OjA3LjY0Mzc4NVoifQ.3PHzMHTejJVO0N2AONsruF9dXqbWw5GXkx9IxL2IYq8BEBy2IJKvgIr1IGb59g5xjTDVvPnVtnmNgRpKaM3UBA
+
+{
+    "followee": 2
+}
+
+### get follower
+GET http://localhost:6688/follower/geter
+Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Mzk3OTg4MzYsImV4cCI6MTc0MDQwMzYzNiwibmJmIjoxNzM5Nzk4ODM2LCJpc3MiOiJhY2NvdW50X3NlcnZlciIsImF1ZCI6ImFjY291bnRfd2ViIiwidWlkIjoxLCJuaWNrbmFtZSI6IlRlYW1NZW5nIiwicGhvbmUiOiIxMzg3Nzc3ODg4OCIsInBhc3N3b3JkX2hhc2giOiIkYXJnb24yaWQkdj0xOSRtPTE5NDU2LHQ9MixwPTEkRTJJSm83aktwTkdMK0hzV0NGOG1tQSRjVDV2R0ZxVi9aUVl1QzhXWGxaaWlvSnd3dkVRWVpZT2F1Z2hKUUEzUHE0IiwiY3JlYXRlZF9hdCI6IjIwMjUtMDItMTdUMTM6Mjc6MDcuNjQzNzg1WiIsInVwZGF0ZWRfYXQiOiIyMDI1LTAyLTE3VDEzOjI3OjA3LjY0Mzc4NVoifQ.3PHzMHTejJVO0N2AONsruF9dXqbWw5GXkx9IxL2IYq8BEBy2IJKvgIr1IGb59g5xjTDVvPnVtnmNgRpKaM3UBA
+
+
+### get followee
+GET http://localhost:6688/follower/getee
+Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Mzk3OTg4MzYsImV4cCI6MTc0MDQwMzYzNiwibmJmIjoxNzM5Nzk4ODM2LCJpc3MiOiJhY2NvdW50X3NlcnZlciIsImF1ZCI6ImFjY291bnRfd2ViIiwidWlkIjoxLCJuaWNrbmFtZSI6IlRlYW1NZW5nIiwicGhvbmUiOiIxMzg3Nzc3ODg4OCIsInBhc3N3b3JkX2hhc2giOiIkYXJnb24yaWQkdj0xOSRtPTE5NDU2LHQ9MixwPTEkRTJJSm83aktwTkdMK0hzV0NGOG1tQSRjVDV2R0ZxVi9aUVl1QzhXWGxaaWlvSnd3dkVRWVpZT2F1Z2hKUUEzUHE0IiwiY3JlYXRlZF9hdCI6IjIwMjUtMDItMTdUMTM6Mjc6MDcuNjQzNzg1WiIsInVwZGF0ZWRfYXQiOiIyMDI1LTAyLTE3VDEzOjI3OjA3LjY0Mzc4NVoifQ.3PHzMHTejJVO0N2AONsruF9dXqbWw5GXkx9IxL2IYq8BEBy2IJKvgIr1IGb59g5xjTDVvPnVtnmNgRpKaM3UBA
+
+### delete follower
+DELETE http://localhost:6688/follower/delete/2
+Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Mzk3OTg4MzYsImV4cCI6MTc0MDQwMzYzNiwibmJmIjoxNzM5Nzk4ODM2LCJpc3MiOiJhY2NvdW50X3NlcnZlciIsImF1ZCI6ImFjY291bnRfd2ViIiwidWlkIjoxLCJuaWNrbmFtZSI6IlRlYW1NZW5nIiwicGhvbmUiOiIxMzg3Nzc3ODg4OCIsInBhc3N3b3JkX2hhc2giOiIkYXJnb24yaWQkdj0xOSRtPTE5NDU2LHQ9MixwPTEkRTJJSm83aktwTkdMK0hzV0NGOG1tQSRjVDV2R0ZxVi9aUVl1QzhXWGxaaWlvSnd3dkVRWVpZT2F1Z2hKUUEzUHE0IiwiY3JlYXRlZF9hdCI6IjIwMjUtMDItMTdUMTM6Mjc6MDcuNjQzNzg1WiIsInVwZGF0ZWRfYXQiOiIyMDI1LTAyLTE3VDEzOjI3OjA3LjY0Mzc4NVoifQ.3PHzMHTejJVO0N2AONsruF9dXqbWw5GXkx9IxL2IYq8BEBy2IJKvgIr1IGb59g5xjTDVvPnVtnmNgRpKaM3UBA

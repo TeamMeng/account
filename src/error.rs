@@ -15,6 +15,9 @@ pub enum AppError {
     #[error("{0}")]
     LoginError(String),
 
+    #[error("{0}")]
+    NotFound(String),
+
     #[error("Phone already exists: {0}")]
     PhoneAlreadyExists(String),
 
@@ -56,7 +59,9 @@ impl IntoResponse for AppError {
             | Self::IoError(_)
             | Self::SerdeYamlError(_)
             | Self::SqlxError(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            Self::PhoneAlreadyExists(_) | Self::LoginError(_) => StatusCode::BAD_REQUEST,
+            Self::PhoneAlreadyExists(_) | Self::LoginError(_) | Self::NotFound(_) => {
+                StatusCode::BAD_REQUEST
+            }
             Self::JwtError(_) => StatusCode::UNAUTHORIZED,
         };
 

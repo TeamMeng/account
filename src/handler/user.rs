@@ -39,3 +39,10 @@ pub async fn signin_handler(
         Err(e) => e.into_response(),
     }
 }
+
+pub async fn get_all_users_handler(State(state): State<AppState>) -> Response {
+    match state.get_all_users().await {
+        Ok(user) => success(user),
+        Err(e) => e.into_response(),
+    }
+}
