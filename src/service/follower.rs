@@ -22,8 +22,6 @@ impl AppState {
         .execute(&self.pool)
         .await?;
 
-        self.create_feed(input.followee as _, user.uid).await?;
-
         Ok(())
     }
 
@@ -76,8 +74,6 @@ impl AppState {
         .bind(id)
         .execute(&self.pool)
         .await?;
-
-        self.delete_feed(id, user.uid).await?;
 
         Ok(())
     }
