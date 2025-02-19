@@ -1,5 +1,6 @@
 mod feed;
 mod follower;
+mod like;
 mod post;
 mod user;
 
@@ -8,6 +9,7 @@ use anyhow::Result;
 use axum::{middleware::from_fn, Router};
 use feed::feed_router;
 use follower::follower_router;
+use like::like_router;
 use post::post_router;
 use tokio::net::TcpListener;
 use tracing::{info, level_filters::LevelFilter};
@@ -25,12 +27,14 @@ pub async fn start_route(state: AppState) -> Result<()> {
     let follower_routers = follower_router(state.clone());
     let post_routers = post_router(state.clone());
     let feed_routers = feed_router(state.clone());
+    let like_routers = like_router(state.clone());
 
     let app = Router::new()
         .nest("/follower", follower_routers)
         .nest("/user", user_routers)
         .nest("/post", post_routers)
         .nest("/feed", feed_routers)
+        .nest("/like", like_routers)
         .layer(from_fn(time));
 
     let addr = format!("{}{}", ADDR, state.config.server.port);
