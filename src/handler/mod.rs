@@ -1,7 +1,9 @@
+mod feed;
 mod follower;
 mod post;
 mod user;
 
+pub use feed::feeds_handler;
 pub use follower::{
     delete_follower_handler, followee_handler, get_all_followee_handler, get_all_follower_handler,
 };

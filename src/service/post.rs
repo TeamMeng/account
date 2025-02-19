@@ -74,6 +74,19 @@ impl AppState {
 
         Ok(posts)
     }
+
+    pub async fn find_post_by_pid(&self, pid: i64) -> Result<Option<Post>, AppError> {
+        let post = sqlx::query_as(
+            "
+            select * from wb_post where pid = $1 and is_deleted = false
+            ",
+        )
+        .bind(pid)
+        .fetch_optional(&self.pool)
+        .await?;
+
+        Ok(post)
+    }
 }
 
 #[cfg(test)]
@@ -97,6 +110,9 @@ mod tests {
         let post = state.create_post(user.clone(), content).await?;
 
         let ret = state.find_post(post.pid, user.uid).await?;
+        assert!(ret.is_some());
+
+        let ret = state.find_post_by_pid(post.pid).await?;
         assert!(ret.is_some());
 
         assert_eq!(post.uid, user.uid);

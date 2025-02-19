@@ -1,12 +1,11 @@
+use crate::{
+    delete_follower_handler, followee_handler, get_all_followee_handler, get_all_follower_handler,
+    verify_token, AppState,
+};
 use axum::{
     middleware::from_fn_with_state,
     routing::{delete, get, post},
     Router,
-};
-
-use crate::{
-    delete_follower_handler, followee_handler, get_all_followee_handler, get_all_follower_handler,
-    verify_token, AppState,
 };
 
 pub fn follower_router(state: AppState) -> Router {
@@ -17,5 +16,4 @@ pub fn follower_router(state: AppState) -> Router {
         .route("/delete/{id}", delete(delete_follower_handler))
         .layer(from_fn_with_state(state.clone(), verify_token))
         .with_state(state)
-    // .route("/followers/:uid", post(handler));
 }

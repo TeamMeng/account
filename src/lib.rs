@@ -17,13 +17,13 @@ pub use config::{code_init, config_init, AppConfig, AuthConfig, ServerConfig, ST
 pub use error::{AppError, ErrorWarp};
 pub use handler::{
     create_post_handler, create_user_handler, delete_follower_handler, delete_post_handler,
-    followee_handler, get_all_followee_handler, get_all_follower_handler, get_all_posts_handler,
-    get_post_handler, signin_handler,
+    feeds_handler, followee_handler, get_all_followee_handler, get_all_follower_handler,
+    get_all_posts_handler, get_post_handler, signin_handler,
 };
 pub use middleware::{time, verify_token};
 pub use model::{
-    ChangeUserPassword, CreateFollower, CreatePost, CreateUser, Follower, Post, RespToken,
-    SigninUser, User,
+    ChangeUserPassword, CreateFollower, CreatePost, CreateUser, Feed, Follower, Post, ReqFeed,
+    RespToken, SigninUser, User,
 };
 pub use utils::{
     fail, fail_null, hash_password, local_timestamp, success, success_null, validate_phone,

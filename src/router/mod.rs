@@ -1,3 +1,4 @@
+mod feed;
 mod follower;
 mod post;
 mod user;
@@ -5,6 +6,7 @@ mod user;
 use crate::{time, AppState};
 use anyhow::Result;
 use axum::{middleware::from_fn, Router};
+use feed::feed_router;
 use follower::follower_router;
 use post::post_router;
 use tokio::net::TcpListener;
@@ -22,10 +24,13 @@ pub async fn start_route(state: AppState) -> Result<()> {
     let user_routers = user_router(state.clone());
     let follower_routers = follower_router(state.clone());
     let post_routers = post_router(state.clone());
+    let feed_routers = feed_router(state.clone());
+
     let app = Router::new()
         .nest("/follower", follower_routers)
         .nest("/user", user_routers)
         .nest("/post", post_routers)
+        .nest("/feed", feed_routers)
         .layer(from_fn(time));
 
     let addr = format!("{}{}", ADDR, state.config.server.port);

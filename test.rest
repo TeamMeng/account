@@ -28,7 +28,16 @@ Content-Type: application/json
     "password": "hunter42"
 }
 
-### signin valid
+### TeamMeng signin valid
+POST http://localhost:6688/user/signin
+Content-Type: application/json
+
+{
+    "phone": "13877778889",
+    "password": "hunter42"
+}
+
+### TeamAlice signin valid
 POST http://localhost:6688/user/signin
 Content-Type: application/json
 
@@ -83,9 +92,18 @@ Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Mzk4ODkxN
 GET http://localhost:6688/post/get/1
 
 ### get post
-GET http://localhost:6688/post/get/1/1
+GET http://localhost:6688/post/get/1/4
 
 ### delete post
-DELETE http://localhost:6688/post/delete/2
-Content-Type: application/json
+DELETE http://localhost:6688/post/delete/4
 Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Mzk4ODkxNTYsImV4cCI6MTc0MDQ5Mzk1NiwibmJmIjoxNzM5ODg5MTU2LCJpc3MiOiJhY2NvdW50X3NlcnZlciIsImF1ZCI6ImFjY291bnRfd2ViIiwidWlkIjoxLCJuaWNrbmFtZSI6IlRlYW1NZW5nIiwicGhvbmUiOiIxMzg3Nzc3ODg4OCIsInBhc3N3b3JkX2hhc2giOiIkYXJnb24yaWQkdj0xOSRtPTE5NDU2LHQ9MixwPTEkSzFIUnlIZ2k4cWpnUlR4Q0RiMVNpUSQvRlZWM3BCeDlFRzdsaGV3Qi9tQitEOE5UbTZGazJrenc3M1h0MHV2L2dRIiwiY3JlYXRlZF9hdCI6IjIwMjUtMDItMThUMTQ6MzI6MzAuNzM3NDc4WiIsInVwZGF0ZWRfYXQiOiIyMDI1LTAyLTE4VDE0OjMyOjMwLjczNzQ3OFoifQ.aIoRlacATDeEZYbrLmLikq2zawGETEoo6kb3OlW7jftj8frrYVLDIyMafP0edwyZtvIHBGwCOPAWnpGT3qudAg
+
+### get feeds
+GET http://localhost:6688/feed/get
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3Mzk5NTgyNDAsImV4cCI6MTc0MDU2MzA0MCwibmJmIjoxNzM5OTU4MjQwLCJpc3MiOiJhY2NvdW50X3NlcnZlciIsImF1ZCI6ImFjY291bnRfd2ViIiwidWlkIjoyLCJuaWNrbmFtZSI6IlRlYW1BbGljZSIsInBob25lIjoiMTM4Nzc3Nzg4ODkiLCJwYXNzd29yZF9oYXNoIjoiJGFyZ29uMmlkJHY9MTkkbT0xOTQ1Nix0PTIscD0xJDg3STdwMTdTUklHUFlUSzE3SVNTUnckcTJZWnZZOUUreXU4elJ5YjJndXdPaG9BSlkvZnN1M3lyYXFUL2kxdmN4ZyIsImNyZWF0ZWRfYXQiOiIyMDI1LTAyLTE4VDE0OjMyOjMyLjY2NzQ1MFoiLCJ1cGRhdGVkX2F0IjoiMjAyNS0wMi0xOFQxNDozMjozMi42Njc0NTBaIn0.ThxJyFfhsyqKhLOKn_y67NHR4crm9GXtMwctOb4eV9PJtzEaE-1AP5jtaQ6DmmsJfm6E3j-fYzwGYEJuNqyzAQ
+
+{
+    "pid": 5,
+    "size": 1
+}
