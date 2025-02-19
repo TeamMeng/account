@@ -1,3 +1,4 @@
+mod comment;
 mod feed;
 mod follower;
 mod like;
@@ -7,6 +8,7 @@ mod user;
 use crate::{time, AppState};
 use anyhow::Result;
 use axum::{middleware::from_fn, Router};
+use comment::comment_handler;
 use feed::feed_router;
 use follower::follower_router;
 use like::like_router;
@@ -28,6 +30,7 @@ pub async fn start_route(state: AppState) -> Result<()> {
     let post_routers = post_router(state.clone());
     let feed_routers = feed_router(state.clone());
     let like_routers = like_router(state.clone());
+    let comment_routers = comment_handler(state.clone());
 
     let app = Router::new()
         .nest("/follower", follower_routers)
@@ -35,6 +38,7 @@ pub async fn start_route(state: AppState) -> Result<()> {
         .nest("/post", post_routers)
         .nest("/feed", feed_routers)
         .nest("/like", like_routers)
+        .nest("/comment", comment_routers)
         .layer(from_fn(time));
 
     let addr = format!("{}{}", ADDR, state.config.server.port);

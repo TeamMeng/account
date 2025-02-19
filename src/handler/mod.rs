@@ -1,9 +1,11 @@
+mod comment;
 mod feed;
 mod follower;
 mod like;
 mod post;
 mod user;
 
+pub use comment::{create_comment_handler, delete_comment_handler, get_all_comments_handler};
 pub use feed::feeds_handler;
 pub use follower::{
     delete_follower_handler, followee_handler, get_all_followee_handler, get_all_follower_handler,

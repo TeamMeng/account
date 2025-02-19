@@ -1,3 +1,4 @@
+mod comment;
 mod feed;
 mod follower;
 mod like;
